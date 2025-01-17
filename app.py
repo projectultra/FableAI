@@ -42,6 +42,7 @@ def generate_story():
         response = requests.post(GROQ_API_ENDPOINT, headers=HEADERS, json=payload)
         response.raise_for_status()
         story = response.json()["choices"][0]["message"]["content"]
+        print(story)
         return jsonify({"story": story})
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
