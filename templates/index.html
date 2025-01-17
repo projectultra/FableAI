@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FableAI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        #story {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>FableAI</h1>
+    <form id="storyForm">
+        <label for="character">Main Character:</label>
+        <input type="text" id="character" name="character" required>
+        <label for="setting">Setting:</label>
+        <input type="text" id="setting" name="setting" required>
+        <label for="theme">Theme:</label>
+        <input type="text" id="theme" name="theme" required>
+        <button type="submit">Generate Story</button>
+    </form>
+    <div id="story"></div>
+
+    <script>
+        const form = document.getElementById('storyForm');
+        const storyDiv = document.getElementById('story');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const character = document.getElementById('character').value;
+            const setting = document.getElementById('setting').value;
+            const theme = document.getElementById('theme').value;
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ character, setting, theme })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    storyDiv.textContent = result.story;
+                } else {
+                    storyDiv.textContent = `Error: ${result.error}`;
+                }
+            } catch (err) {
+                storyDiv.textContent = `Error: ${err.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
